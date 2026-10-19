@@ -1,0 +1,12 @@
+services:
+  arca-sim:
+    build: .
+    ports:
+      - "4100:4100"
+    environment:
+      ARCA_SIM_PTOS_VENTA: "1,2"
+      ARCA_SIM_CONDICION_EMISOR: RI
+    volumes:
+      - arca-sim-data:/data
+volumes:
+  arca-sim-data:
