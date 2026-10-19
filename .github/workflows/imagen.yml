@@ -1,0 +1,31 @@
+name: Imagen Docker
+
+# Publica ghcr.io/easyindustry/arca-api-sim con el sha corto y "latest" en cada push a main.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  imagen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: tag
+        run: echo "sha=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/easyindustry/arca-api-sim:${{ steps.tag.outputs.sha }}
+            ghcr.io/easyindustry/arca-api-sim:latest
